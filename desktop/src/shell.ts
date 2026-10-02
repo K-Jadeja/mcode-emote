@@ -1,7 +1,7 @@
 type NeutralinoApi = typeof import("@neutralinojs/lib");
 
-const DESIGN_WIDTH = 272;
-const DESIGN_HEIGHT = 324;
+const DESIGN_WIDTH = 224;
+const DESIGN_HEIGHT = 272;
 const WINDOW_EDGE_MARGIN = 16;
 
 export interface WindowPosition {
@@ -120,7 +120,7 @@ function createNativeShell(api: NeutralinoApi): PetShell {
       await api.window.setAlwaysOnTop(true);
       // Neutralino's Windows window size is expressed in physical pixels,
       // while WebView2 lays out in CSS pixels. Scale the native surface so
-      // the 272x324 design viewport is not clipped at 125%/150% display DPI.
+      // the compact design viewport is not clipped at 125%/150% display DPI.
       const displayScale = Math.max(1, globalThis.devicePixelRatio || 1);
       await api.window.setSize({
         width: Math.round(DESIGN_WIDTH * displayScale),

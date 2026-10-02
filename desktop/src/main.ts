@@ -13,6 +13,8 @@ import {
   SESSION_LABEL_ENV,
 } from "../../src/shared/session-label";
 import type { PetSessionState } from "../../src/shared/pet-session-state";
+import { createCompanionLifetime } from "./companion-lifetime";
+import { createChatIdentityClient } from "./chat-identity-client";
 
 function requiredElement<T extends HTMLElement>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -43,13 +45,20 @@ async function main(): Promise<void> {
   }
 
   try {
-    const [environmentEndpoint, capabilityToken, sessionLabel, hideLabel] =
+    const [environmentEndpoint, capabilityToken, sessionLabel, hideLabel, provider] =
       await Promise.all([
         shell.getEnvironmentValue("CLAUDE_EMOTE_ENDPOINT"),
         shell.getEnvironmentValue(SESSION_CAPABILITY_ENV),
         shell.getEnvironmentValue(SESSION_LABEL_ENV),
         shell.getEnvironmentValue(HIDE_SESSION_LABEL_ENV),
+        shell.getEnvironmentValue("CLAUDE_EMOTE_PROVIDER"),
       ]);
+    if (provider === "mcode" || new URL(globalThis.location.href).searchParams.get("provider") === "mcode") {
+      root.dataset.provider = "mcode";
+      document.title = "MCode Emote";
+      requiredElement<HTMLElement>(".activity-kicker").textContent = "MCODE IS";
+      closeButton.setAttribute("aria-label", "Close MCode Emote");
+    }
     const endpoint =
       environmentEndpoint ??
       new URL(globalThis.location.href).searchParams.get("endpoint");
@@ -61,6 +70,8 @@ async function main(): Promise<void> {
       }
       view.setMode("live");
       view.setSessionLabel(sessionLabel, hideLabel === "1");
+      const identity = provider === "mcode" ? createChatIdentityClient(endpoint, capabilityToken,
+        title => view.setSessionLabel(title ?? sessionLabel, hideLabel === "1")) : null;
       let currentState: PetSessionState = {
         sessionId: "connecting",
         sequence: 0,
@@ -98,9 +109,12 @@ async function main(): Promise<void> {
             readinessPending = false;
           });
       };
+      const lifetime = provider === "mcode" ? createCompanionLifetime(() => { void shell.close(0); }) : null;
+      lifetime?.connectionChanged(false);
       const stream = createSessionStreamClient({
         endpoint,
         capabilityToken,
+        reconnectAfterEnd: provider === "mcode",
         onState(state) {
           currentState = state;
           view.render(state, 0, 0);
@@ -108,6 +122,7 @@ async function main(): Promise<void> {
           markReadyAfterRender();
         },
         onConnectionChange(connected) {
+          lifetime?.connectionChanged(connected);
           streamConnected = connected;
           if (connected) {
             markReadyAfterRender();
@@ -125,9 +140,10 @@ async function main(): Promise<void> {
           void shell.reportError(error);
         },
       });
-      disposeMode = () => stream.close();
+      disposeMode = () => { identity?.close(); lifetime?.dispose(); stream.close(); };
     } else {
       view.setMode("demo");
+      view.setSessionLabel("Fix the login screen");
       const states = createDemoStates();
       const demo = createDemoController(states, (state, index) => {
         view.render(state, index, states.length);

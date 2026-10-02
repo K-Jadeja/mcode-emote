@@ -1,0 +1,21 @@
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
+import { randomUUID } from "node:crypto";
+import { expect, it } from "vitest";
+import { prepareNativeRuntime } from "../../src/mcode/native-runtime.js";
+it("moves a deeply cached native payload to a short verified path and rejects corruption", async () => {
+  const root = resolve(".tmp", `native-cache-${randomUUID()}`);
+  const cwd = join(root, "deep-".repeat(30), "plugin-runtime");
+  await mkdir(cwd, { recursive: true });
+  await writeFile(join(cwd, "claude-pet-win_x64.exe"), "exe fixture");
+  await writeFile(join(cwd, "resources.neu"), "resources fixture");
+  const command = { executable: join(cwd, "claude-pet-win_x64.exe"), cwd, args: [], kind: "packaged" as const };
+  const copies = await Promise.all(Array.from({ length: 4 }, () => prepareNativeRuntime(command, join(root, "cache"))));
+  const cached = copies[0];
+  for (const copy of copies) expect(copy).toEqual(cached);
+  expect(cached.executable.length).toBeLessThan(command.executable.length);
+  expect(await readFile(cached.executable, "utf8")).toBe("exe fixture");
+  expect(await prepareNativeRuntime(command, join(root, "cache"))).toEqual(cached);
+  await writeFile(cached.executable, "corrupted");
+  await expect(prepareNativeRuntime(command, join(root, "cache"))).rejects.toThrow("cache is corrupt");
+});

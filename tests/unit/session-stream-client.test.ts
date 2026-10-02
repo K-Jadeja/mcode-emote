@@ -131,6 +131,20 @@ describe("desktop session stream client", () => {
     client.close();
   });
 
+  it("allows an MCode session to reconnect after ended and receive a resumed session", async () => {
+    const ended = { sessionId: "s", sequence: 3, status: "ended", activity: "idle", timestamp: 101 };
+    const resumed = { ...ended, sequence: 4, status: "running", activity: "greeting" };
+    let requests = 0;
+    const onState = vi.fn();
+    const client = createSessionStreamClient({
+      endpoint: "http://127.0.0.1:4312", capabilityToken: TOKEN,
+      reconnectAfterEnd: true, initialRetryMs: 5, maxRetryMs: 5, onState,
+      fetchImpl: async () => sseResponse([`event: state\ndata: ${JSON.stringify(requests++ === 0 ? ended : resumed)}\n\n`]),
+    });
+    try { await vi.waitFor(() => expect(onState).toHaveBeenCalledWith(resumed)); }
+    finally { client.close(); }
+  });
+
   it("announces overlay readiness with the same header contract", async () => {
     const fetchImpl = vi.fn<typeof fetch>(async (url, init) => {
       expect(String(url)).toBe("http://127.0.0.1:4312/overlay-ready");

@@ -30,6 +30,8 @@ export interface PetSessionStateSource {
 }
 
 export interface AvatarServerOptions {
+  /** Optional local presentation channel, separate from semantic state. */
+  identity?: { getSnapshot(): { title: string | null }; update(raw: unknown): boolean };
   instanceId: string;
   port: number;
   /** Called for every accepted event with the mapper reaction. */
@@ -152,6 +154,7 @@ function isBrowserEndpoint(pathname: string): boolean {
     "/stream",
     "/overlay-ready",
     "/overlay-health",
+    "/identity",
   ].includes(pathname);
 }
 
@@ -205,6 +208,19 @@ export function startServer(opts: AvatarServerOptions): Promise<AvatarServer> {
         if (!requireCapability(req, res, opts.capabilityToken)) return;
         res.setHeader("cache-control", "no-store");
         return writeJson(res, 200, opts.sessionState.getSnapshot());
+      }
+
+      if (opts.identity && url.pathname === "/identity") {
+        if (!applyStateCors(req, res)) return;
+        if (!requireCapability(req, res, opts.capabilityToken)) return;
+        res.setHeader("cache-control", "no-store");
+        if (req.method === "GET") return writeJson(res, 200, opts.identity.getSnapshot());
+        if (req.method === "POST") {
+          const body = await readJsonBody(req);
+          if (!body || !opts.identity.update(body)) return writeJson(res, 400, { ok: false, error: "invalid_identity" });
+          return writeJson(res, 200, { ok: true });
+        }
+        return writeJson(res, 405, { ok: false });
       }
 
       if (req.method === "GET" && url.pathname === "/stream") {

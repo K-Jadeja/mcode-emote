@@ -48,6 +48,22 @@ export const STATUS_LABELS: Record<SessionStatus, string> = {
   disconnected: "disconnected",
 };
 
+/** Describe the observed work; status takes priority over a stale activity. */
+export function describeActivity(state: PetState): string {
+  if (state.status === "needs-input") return "needs your approval";
+  if (state.status === "ready") return "ready for your next task";
+  if (state.status === "blocked") return "needs your attention";
+  if (state.status === "disconnected") return "reconnecting";
+  if (state.status === "ended") return "session ended";
+  const labels: Record<Activity, string> = {
+    greeting: "starting your session", idle: "waiting",
+    thinking: "thinking", reading: "reading & searching",
+    writing: "editing files", tooling: "using tools",
+    talking: "responding", compacting: "compacting context", failure: "needs your attention",
+  };
+  return labels[state.activity];
+}
+
 export function getPose(activity: Activity): Pose {
   const entry = manifest.activities[activity];
   if (!entry || entry.frames.length === 0) {

@@ -1,0 +1,20 @@
+import { afterEach, expect, it, vi } from "vitest";
+import { createCompanionLifetime } from "../../desktop/src/companion-lifetime.js";
+afterEach(() => vi.useRealTimers());
+it("closes an orphan, but allows reconnect and disposes its timer", () => {
+  vi.useFakeTimers();
+  const close = vi.fn();
+  const lifetime = createCompanionLifetime(close);
+  lifetime.connectionChanged(false);
+  vi.advanceTimersByTime(4000);
+  lifetime.connectionChanged(true);
+  vi.advanceTimersByTime(6000);
+  expect(close).not.toHaveBeenCalled();
+  lifetime.connectionChanged(false);
+  vi.advanceTimersByTime(5000);
+  expect(close).toHaveBeenCalledTimes(1);
+  lifetime.connectionChanged(false);
+  lifetime.dispose();
+  vi.advanceTimersByTime(6000);
+  expect(close).toHaveBeenCalledTimes(1);
+});

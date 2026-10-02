@@ -3,11 +3,20 @@ import {
   ACTIVITIES,
   createDemoStates,
   getPose,
+  describeActivity,
   isPetState,
   parsePetState,
 } from "../../desktop/src/pet-state";
 
 describe("desktop pet semantic state", () => {
+  it("prioritizes approval and connection status over the last activity", () => {
+    const state = { sessionId: "test", sequence: 1, timestamp: 1000, activity: "thinking" as const, status: "running" as const };
+    expect(describeActivity(state)).toBe("thinking");
+    expect(describeActivity({ ...state, status: "needs-input" })).toBe("needs your approval");
+    expect(describeActivity({ ...state, status: "ready" })).toBe("ready for your next task");
+    expect(describeActivity({ ...state, status: "disconnected" })).toBe("reconnecting");
+    expect(describeActivity({ ...state, status: "ended" })).toBe("session ended");
+  });
   it("declares one valid local frame set for every activity", () => {
     for (const activity of ACTIVITIES) {
       const pose = getPose(activity);

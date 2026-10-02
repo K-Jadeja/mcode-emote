@@ -324,7 +324,7 @@ async function main() {
     if (installRes.code !== 0) {
       throw new Error(`npm install failed (code=${installRes.code}):\n${installRes.stderr}`);
     }
-    installedRoot = join(installDir, "node_modules", "claude-emote");
+    installedRoot = join(installDir, "node_modules", JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")).name);
     check("installed package root exists", existsSync(installedRoot), installedRoot);
     check(
       "installed dist launcher exists",

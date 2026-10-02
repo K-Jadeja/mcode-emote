@@ -1,6 +1,6 @@
 import {
-  STATUS_LABELS,
   formatSessionLabel,
+  describeActivity,
   getPose,
   type PetState,
 } from "./pet-state";
@@ -36,10 +36,8 @@ function requiredElement<T extends HTMLElement>(
 
 export function createPetView(root: HTMLElement): PetView {
   const image = requiredElement<HTMLImageElement>(root, "#pet-image");
-  const statusLabel = requiredElement<HTMLElement>(root, "#status-label");
   const activityLabel = requiredElement<HTMLElement>(root, "#activity-label");
   const sessionLabel = requiredElement<HTMLElement>(root, "#session-label");
-  const stepLabel = requiredElement<HTMLElement>(root, "#step-label");
   const pauseButton = requiredElement<HTMLButtonElement>(root, "#pause-button");
   const fatalError = requiredElement<HTMLParagraphElement>(root, "#fatal-error");
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -55,7 +53,8 @@ export function createPetView(root: HTMLElement): PetView {
       preferredSessionLabel,
       sessionLabelHidden,
     );
-    sessionLabel.hidden = sessionLabelHidden;
+    sessionLabel.hidden = sessionLabelHidden || !preferredSessionLabel;
+    sessionLabel.title = sessionLabel.hidden ? "" : sessionLabel.textContent ?? "";
   }
 
   function stopFrames(): void {
@@ -81,22 +80,14 @@ export function createPetView(root: HTMLElement): PetView {
     renderVersion += 1;
     const version = renderVersion;
     const pose = getPose(state.activity);
-    const alt = `Claude Pet is ${pose.label}`;
+    const alt = `${root.dataset.provider === "mcode" ? "MCode Emote" : "Claude Pet"} is ${pose.label}`;
 
     root.dataset.activity = state.activity;
     root.dataset.status = state.status;
     root.dataset.health = "ok";
-    statusLabel.textContent = STATUS_LABELS[state.status];
-    activityLabel.textContent = pose.label;
+    activityLabel.textContent = describeActivity(state);
     currentSessionId = state.sessionId;
     updateSessionLabel();
-    stepLabel.textContent =
-      totalSteps > 0
-        ? `${String(step + 1).padStart(2, "0")} / ${String(totalSteps).padStart(
-            2,
-            "0",
-          )}`
-        : `#${String(state.sequence).padStart(4, "0")}`;
     fatalError.hidden = true;
     showFrame(pose.frames[0]!, alt, version);
 
@@ -120,7 +111,7 @@ export function createPetView(root: HTMLElement): PetView {
       root.dataset.mode = mode;
       root.setAttribute(
         "aria-label",
-        mode === "demo" ? "Claude Pet demo" : "Claude Pet live session",
+        `${root.dataset.provider === "mcode" ? "MCode Emote" : "Claude Pet"} ${mode === "demo" ? "demo" : "live session"}`,
       );
     },
     setPaused(paused) {

@@ -20,6 +20,7 @@ export interface SessionStreamClientOptions {
   fetchImpl?: typeof fetch;
   initialRetryMs?: number;
   maxRetryMs?: number;
+  reconnectAfterEnd?: boolean;
 }
 
 const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]"]);
@@ -147,7 +148,7 @@ export function createSessionStreamClient(
       const state = parsePetSessionState(JSON.parse(event.data));
       if (state.sequence < lastSequence) return;
       lastSequence = state.sequence;
-      ended = state.status === "ended";
+      ended = state.status === "ended" && !options.reconnectAfterEnd;
       options.onState(state);
     } catch (error) {
       options.onProtocolError?.(

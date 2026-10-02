@@ -3,7 +3,8 @@
  *
  * These values are deliberately separate from PetSessionState. A project
  * label is presentation context, not a Claude lifecycle event, and must never
- * enter the HTTP/SSE protocol.
+ * enter the semantic HTTP/SSE protocol. MCode chat titles use a separate,
+ * opt-in identity channel; this environment value remains a folder label.
  */
 export const SESSION_LABEL_ENV = "CLAUDE_EMOTE_SESSION_LABEL";
 export const HIDE_SESSION_LABEL_ENV = "CLAUDE_EMOTE_HIDE_SESSION_LABEL";

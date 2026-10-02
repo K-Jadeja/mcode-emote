@@ -1,18 +1,21 @@
 {
-  "name": "claude-emote",
-  "version": "0.1.0",
-  "description": "Animated pixel-art avatar for Claude Code, ported from pi-emote.",
+  "name": "mcode-emote",
+  "version": "0.3.0",
+  "description": "A small animated desktop companion for MiniMax Code.",
   "license": "MIT",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/K-Jadeja/claude-emote.git"
+    "url": "https://github.com/K-Jadeja/mcode-emote.git"
   },
   "type": "module",
   "bin": {
-    "claude-emote": "bin/claude-emote.cjs"
+    "claude-emote": "bin/claude-emote.cjs",
+    "mcode-emote": "bin/mcode-emote.cjs"
   },
   "scripts": {
+    "mcode:install-command": "node scripts/install-mcode-command.mjs",
+    "mcode:smoke": "node scripts/smoke-mcode-local.mjs",
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "prepack": "npm run build && npm run overlay:package",

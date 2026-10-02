@@ -31,10 +31,10 @@
   "modes": {
     "window": {
       "title": "Claude Pet",
-      "width": 272,
-      "height": 324,
-      "minWidth": 272,
-      "minHeight": 324,
+      "width": 224,
+      "height": 272,
+      "minWidth": 224,
+      "minHeight": 272,
       "center": true,
       "fullScreen": false,
       "alwaysOnTop": true,

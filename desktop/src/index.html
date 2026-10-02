@@ -15,9 +15,8 @@
   </head>
   <body>
     <main id="pet-shell" class="pet-shell" aria-label="Claude Pet demo">
-      <header class="status-ribbon" aria-live="polite">
-        <span class="status-light" aria-hidden="true"></span>
-        <span id="status-label">running</span>
+      <header class="session-heading">
+        <span id="session-label" hidden></span>
       </header>
 
       <section class="portrait-stage" aria-label="Pet animation">
@@ -38,15 +37,10 @@
         <span class="activity-signal signal-three" aria-hidden="true"></span>
       </section>
 
-      <section class="activity-plate">
+      <section class="activity-plate" aria-live="polite">
         <span class="activity-kicker">CLAUDE IS</span>
         <strong id="activity-label" class="activity-label">resting</strong>
       </section>
-
-      <footer class="session-line">
-        <span id="session-label">demo session</span>
-        <span id="step-label" aria-label="Demo step">01 / 09</span>
-      </footer>
 
       <nav id="pet-controls" class="pet-controls" aria-label="Pet controls">
         <button id="pause-button" type="button" aria-label="Pause demo">Ⅱ</button>

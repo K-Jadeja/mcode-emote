@@ -30,7 +30,7 @@ button {
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 17px 20px 14px;
+  padding: 8px;
   cursor: grab;
   isolation: isolate;
 }
@@ -39,68 +39,24 @@ button {
   cursor: grabbing;
 }
 
-.pet-shell::before {
-  content: "";
-  position: absolute;
-  inset: 33px 13px 12px;
-  z-index: -2;
-  border: 1px solid rgb(240 180 90 / 42%);
-  background: rgb(13 16 25 / 88%);
-  box-shadow:
-    0 18px 38px rgb(0 0 0 / 38%),
-    0 0 0 4px rgb(10 12 19 / 28%);
-  clip-path: polygon(
-    12px 0,
-    calc(100% - 12px) 0,
-    100% 12px,
-    100% calc(100% - 12px),
-    calc(100% - 12px) 100%,
-    12px 100%,
-    0 calc(100% - 12px),
-    0 12px
-  );
-}
-
-.pet-shell::after {
-  content: "";
-  position: absolute;
-  left: 30px;
-  right: 30px;
-  bottom: 4px;
-  z-index: -3;
+.session-heading {
+  width: 190px;
   height: 18px;
-  background: rgb(0 0 0 / 38%);
-  filter: blur(9px);
-  border-radius: 50%;
+  margin: 0 auto;
+  padding-right: 23px;
+  color: #c1c6d0;
+  font: 11px/18px Consolas, "Cascadia Mono", monospace;
+  text-shadow: 0 1px 2px #000;
 }
 
-.status-ribbon {
-  position: relative;
-  z-index: 4;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 104px;
-  height: 29px;
-  padding: 0 15px 0 11px;
-  color: var(--accent-ink);
-  background: var(--accent);
-  box-shadow: 4px 4px 0 rgb(7 9 14 / 70%);
-  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%);
-  font-size: 11px;
-  font-weight: 750;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+#session-label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.status-light {
-  width: 6px;
-  height: 6px;
-  background: currentColor;
-  box-shadow: 0 0 0 2px rgb(25 20 13 / 18%);
-  transform: rotate(45deg);
-  animation: status-pulse 1.6s steps(2, end) infinite;
-}
+#session-label[hidden] { display: none; }
 
 .portrait-stage {
   position: relative;
@@ -117,11 +73,9 @@ button {
   height: 176px;
   object-fit: cover;
   image-rendering: pixelated;
-  border: 1px solid rgb(250 224 173 / 30%);
+
   background: #171c2c;
-  box-shadow:
-    0 0 0 5px rgb(7 10 17 / 72%),
-    7px 9px 0 rgb(0 0 0 / 24%);
+
   clip-path: polygon(
     9px 0,
     calc(100% - 9px) 0,
@@ -199,7 +153,7 @@ button {
   padding: 6px 12px 7px 14px;
   border-left: 3px solid var(--accent);
   background: rgb(23 28 42 / 96%);
-  box-shadow: 5px 5px 0 rgb(2 4 8 / 52%);
+
 }
 
 .activity-kicker {
@@ -216,7 +170,7 @@ button {
   overflow: hidden;
   color: #fff8e9;
   font-family: "Segoe UI Variable Display", "Segoe UI", sans-serif;
-  font-size: 17px;
+  font-size: 14px;
   font-weight: 680;
   letter-spacing: -0.025em;
   line-height: 1.15;
@@ -224,22 +178,10 @@ button {
   white-space: nowrap;
 }
 
-.session-line {
-  display: flex;
-  justify-content: space-between;
-  width: 190px;
-  margin: 10px auto 0;
-  color: rgb(248 240 220 / 50%);
-  font-family: Consolas, "Cascadia Mono", monospace;
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
 .pet-controls {
   position: absolute;
-  top: 16px;
-  right: 17px;
+  top: 8px;
+  right: 8px;
   z-index: 6;
   display: flex;
   gap: 4px;
@@ -341,7 +283,6 @@ button {
   animation: pet-jolt 480ms steps(2, end) infinite;
 }
 
-.pet-shell[data-paused="true"] .status-light,
 .pet-shell[data-paused="true"] .pet-image,
 .pet-shell[data-paused="true"] .activity-signal {
   animation-play-state: paused;
@@ -364,17 +305,6 @@ button {
   }
   50% {
     transform: translateX(3px);
-  }
-}
-
-@keyframes status-pulse {
-  0%,
-  48% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0.35;
   }
 }
 

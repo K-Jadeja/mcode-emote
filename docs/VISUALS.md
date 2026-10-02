@@ -58,3 +58,31 @@ Tool: built-in `image_gen` (no API/CLI fallback).
 Reference: `emotes/default/hi/hi1.png`.
 
 > Use case: ads-marketing. Create a polished wide GitHub README cover illustration for the open-source developer project named exactly "claude-emote". Use the attached image only as a character identity and pixel-art style reference: Aza, the teal bob-haired character with a tiny gold hair clip and dark plum high-collared outfit. Preserve recognizable hair, face, and outfit. This is promotional artwork, NOT a fake application screenshot. A sophisticated, calm retro-computing editorial banner, wide landscape approximately 3:1. Deep ink/navy canvas inspired by the reference, fine sparse terminal-grid lines, restrained warm amber accents and teal character colors. Large carefully typeset lowercase title exactly "claude-emote", smaller readable line exactly "A little company while you code.". Character is joyfully waving beside the typography, integrated with crisp intentional pixel art; a subtle amber frame motif echoes an always-on-top desktop companion. Plenty of breathing room. Beautiful visual hierarchy, premium indie open-source personality, legible at GitHub README width. No extra copy, no claims or badges, no logos of Anthropic or OpenAI, no fake terminal output, no watermarks. Only the two requested text strings.
+
+## MCode preview
+
+`assets/mcode-emote-preview.jpg` is an actual browser screenshot of the built
+desktop UI at its native 272 x 324 CSS viewport, with `?provider=mcode` and the
+demo paused on thinking. Image loading, provider labeling, healthy render state,
+and absence of horizontal overflow were checked. It is synthetic demo evidence;
+it is not a capture of a paid model session or proof of native window compositing.
+
+## Minimal MCode refinement
+
+`assets/mcode-emote-refined-preview.jpg` is a screenshot of the built desktop UI
+in browser demo mode, checked at 224 by 300 CSS pixels. The character assets are
+unchanged. It shows the removed outer frame and counter, tighter spacing, and
+clearer activity wording. The browser backdrop is not the native window's
+background. See `incidents/2026-10-02-pet-frame-refinement.md` for verification.
+# Folder heading
+
+`assets/mcode-emote-folder-preview.jpg` shows the subsequent minimal refinement:
+the large status ribbon is replaced by a small folder label. Captured from the
+built browser demo with the explicit `demo project` heading. Native design size
+is 224 by 272 CSS pixels; the browser viewport rounded to 224 by 273. It does not
+show a live chat title or prove native transparency. See the folder-heading
+incident note for checks and source provenance.
+
+## Chat-title heading
+
+`assets/mcode-emote-chat-preview.jpg` captures the actual built MCode demo UI at 224 by 272 CSS pixels, paused on editing files with the synthetic title 'Fix the login screen'. The controls are not hovered. A local iframe wrapper allowed focus to move outside the avatar before capture. The screenshot contains no terminal or user desktop content and does not imply live speaking or native-compositor verification.
