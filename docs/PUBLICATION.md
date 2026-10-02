@@ -1,4 +1,4 @@
-# Public source publication ? October 3, 2026
+# Public source publication - October 3, 2026
 
 ## Scope
 

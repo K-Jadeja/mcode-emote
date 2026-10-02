@@ -8,7 +8,7 @@ she sits next to your terminal and reacts when mcode thinks, reads files, writes
 
 *Actual app UI in demo mode, with a sample chat title. No model request behind this screenshot.*
 
-[Install](#install) ? [How it works](#how-it-works) ? [Limits](#what-still-needs-work) ? [Claude version](https://github.com/K-Jadeja/claude-emote)
+[Install](#install) · [How it works](#how-it-works) · [Limits](#what-still-needs-work) · [Claude version](https://github.com/K-Jadeja/claude-emote)
 
 ## Install
 
@@ -84,7 +84,7 @@ npm run mcode:smoke
 
 647 tests passed across 63 files before publication. The real MCode 0.6.2 smoke used an isolated profile and a local model fixture: native startup, reading, normal completion, and cleanup passed. A separate real terminal check verified chat-title delivery and `/rename`. No Claude or MiniMax model quota was used. CI checks the source; native desktop acceptance remains a local check.
 
-The repository retains shared Claude renderer code and tests. [MCode integration guide](docs/MCODE_EMOTE.md) ? [Visual sources](docs/VISUALS.md) ? [Publication notes](docs/PUBLICATION.md).
+The repository retains shared Claude renderer code and tests. [MCode integration guide](docs/MCODE_EMOTE.md) · [Visual sources](docs/VISUALS.md) · [Publication notes](docs/PUBLICATION.md).
 
 ## Credits
 
